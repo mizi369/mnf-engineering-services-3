@@ -184,6 +184,128 @@
         "status": { "type": "string" }
       },
       "required": ["type", "refNo", "date", "customerName", "total"]
+    },
+    "Promotion": {
+      "title": "Promotion",
+      "description": "Marketing campaigns and discounts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["message", "status"]
+    },
+    "AiQuestion": {
+      "title": "AI Question",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "question": { "type": "string" },
+        "status": { "type": "string", "enum": ["Aktif", "Nyahaktif"] }
+      },
+      "required": ["question", "status"]
+    },
+    "AiAnswer": {
+      "title": "AI Answer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "answer": { "type": "string" },
+        "status": { "type": "string", "enum": ["Aktif", "Nyahaktif"] }
+      },
+      "required": ["answer", "status"]
+    },
+    "AiTraining": {
+      "title": "AI Training",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "input": { "type": "string" },
+        "status": { "type": "string", "enum": ["Aktif", "Menunggu", "Ditolak"] }
+      },
+      "required": ["input", "status"]
+    },
+    "AiLock": {
+      "title": "AI Lock",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "keyName": { "type": "string" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["keyName", "active"]
+    },
+    "AiLearningLog": {
+      "title": "AI Learning Log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "activity": { "type": "string" },
+        "status": { "type": "string", "enum": ["Sah", "Batal"] }
+      },
+      "required": ["activity", "status"]
+    },
+    "ServicePrice": {
+      "title": "Service Price",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "price": { "type": "number" }
+      },
+      "required": ["name", "price"]
+    },
+    "BlockedSlot": {
+      "title": "Blocked Slot",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "timeSlot": { "type": "string" }
+      },
+      "required": ["date", "timeSlot"]
+    },
+    "TimeSlotConfig": {
+      "title": "Time Slot Config",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["label", "active"]
+    },
+    "TeamConfig": {
+      "title": "Team Config",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["name", "active"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["debit", "credit"] }
+      },
+      "required": ["amount", "type"]
+    },
+    "Template": {
+      "title": "Template",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "content": { "type": "string" }
+      },
+      "required": ["name"]
     }
   },
   "firestore": {
@@ -197,6 +319,18 @@
     "mnf_settings": { "schema": "Setting", "description": "App settings" },
     "mnf_ai_mappings": { "schema": "AiMapping", "description": "AI configuration" },
     "mnf_chat_logs": { "schema": "ChatMessage", "description": "Communication history" },
-    "mnf_documents": { "schema": "AppDocument", "description": "Financial documents" }
+    "mnf_documents": { "schema": "AppDocument", "description": "Financial documents" },
+    "mnf_promotions": { "schema": "Promotion", "description": "Promotions" },
+    "mnf_ai_questions": { "schema": "AiQuestion", "description": "AI Questions" },
+    "mnf_ai_answers": { "schema": "AiAnswer", "description": "AI Answers" },
+    "mnf_ai_training": { "schema": "AiTraining", "description": "AI Training" },
+    "mnf_ai_locks": { "schema": "AiLock", "description": "AI Locks" },
+    "mnf_ai_learning_logs": { "schema": "AiLearningLog", "description": "AI Learning Logs" },
+    "mnf_services": { "schema": "ServicePrice", "description": "Service Prices" },
+    "mnf_blocked_slots": { "schema": "BlockedSlot", "description": "Blocked Slots" },
+    "mnf_time_slots": { "schema": "TimeSlotConfig", "description": "Time Slots" },
+    "mnf_teams": { "schema": "TeamConfig", "description": "Team configurations" },
+    "mnf_templates": { "schema": "Template", "description": "Message templates" },
+    "mnf_transactions": { "schema": "Transaction", "description": "Financial transactions" }
   }
 }

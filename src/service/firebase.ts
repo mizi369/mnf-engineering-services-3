@@ -1,15 +1,21 @@
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore";
+import { 
+  initializeFirestore, 
+  persistentLocalCache, 
+  persistentMultipleTabManager 
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import firebaseConfig from '../../firebase-applet-config.json';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with Offline Persistence
-const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+// Initialize Firestore with Modern Offline Persistence (Multi-tab support by default)
+const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+}, firebaseConfig.firestoreDatabaseId);
 
 // Initialize Analytics
 let analytics = null;
@@ -19,17 +25,6 @@ if (typeof window !== 'undefined') {
   } catch (e: any) {
     console.warn('[FIREBASE] Analytics failed to initialize:', e.message);
   }
-}
-
-// Enable Offline Persistence for Firestore (Crucial for "Offline System")
-if (typeof window !== 'undefined') {
-  enableIndexedDbPersistence(db).catch((err) => {
-    if (err.code === 'failed-precondition') {
-      console.warn('[FIREBASE] Persistence failed: Multiple tabs open');
-    } else if (err.code === 'unimplemented') {
-      console.warn('[FIREBASE] Persistence failed: Browser not supported');
-    }
-  });
 }
 
 const auth = getAuth(app);

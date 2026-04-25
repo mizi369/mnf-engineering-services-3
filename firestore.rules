@@ -111,6 +111,69 @@ service cloud.firestore {
         && data.total is number;
     }
 
+    function isValidPromotion(data) {
+      return data.keys().hasAll(['message', 'status'])
+        && data.message is string && data.message.size() <= 4096;
+    }
+
+    function isValidAiQuestion(data) {
+      return data.keys().hasAll(['question', 'status'])
+        && data.question is string && data.question.size() <= 4096;
+    }
+
+    function isValidAiAnswer(data) {
+      return data.keys().hasAll(['answer', 'status'])
+        && data.answer is string && data.answer.size() <= 8192;
+    }
+
+    function isValidAiTraining(data) {
+      return data.keys().hasAll(['input', 'status'])
+        && data.input is string && data.input.size() <= 4096;
+    }
+
+    function isValidAiLock(data) {
+      return data.keys().hasAll(['keyName', 'active'])
+        && data.keyName is string && data.keyName.size() <= 128;
+    }
+
+    function isValidAiLearningLog(data) {
+      return data.keys().hasAll(['activity', 'status'])
+        && data.activity is string && data.activity.size() <= 4096;
+    }
+
+    function isValidServicePrice(data) {
+      return data.keys().hasAll(['name', 'price'])
+        && data.name is string && data.name.size() <= 256
+        && data.price is number;
+    }
+
+    function isValidBlockedSlot(data) {
+      return data.keys().hasAll(['date', 'timeSlot'])
+        && data.date is string && data.date.size() <= 64
+        && data.timeSlot is string && data.timeSlot.size() <= 128;
+    }
+
+    function isValidTimeSlotConfig(data) {
+      return data.keys().hasAll(['label', 'active'])
+        && data.label is string && data.label.size() <= 128;
+    }
+
+    function isValidTeamConfig(data) {
+      return data.keys().hasAll(['name', 'active'])
+        && data.name is string && data.name.size() <= 256;
+    }
+
+    function isValidTransaction(data) {
+      return data.keys().hasAll(['amount', 'type'])
+        && data.amount is number
+        && data.type in ['debit', 'credit'];
+    }
+
+    function isValidTemplate(data) {
+      return data.keys().hasAll(['name'])
+        && data.name is string && data.name.size() <= 256;
+    }
+
     // --- Collections ---
 
     match /mnf_bookings/{id} {
@@ -187,6 +250,90 @@ service cloud.firestore {
       allow read: if isSignedIn();
       allow create: if isSignedIn() && isValidAppDocument(incoming());
       allow update: if isSignedIn() && isValidAppDocument(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_promotions/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidPromotion(incoming());
+      allow update: if isSignedIn() && isValidPromotion(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_ai_questions/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidAiQuestion(incoming());
+      allow update: if isSignedIn() && isValidAiQuestion(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_ai_answers/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidAiAnswer(incoming());
+      allow update: if isSignedIn() && isValidAiAnswer(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_ai_training/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidAiTraining(incoming());
+      allow update: if isSignedIn() && isValidAiTraining(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_ai_locks/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidAiLock(incoming());
+      allow update: if isSignedIn() && isValidAiLock(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_ai_learning_logs/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidAiLearningLog(incoming());
+      allow update: if isSignedIn() && isValidAiLearningLog(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_services/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidServicePrice(incoming());
+      allow update: if isSignedIn() && isValidServicePrice(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_blocked_slots/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidBlockedSlot(incoming());
+      allow update: if isSignedIn() && isValidBlockedSlot(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_time_slots/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidTimeSlotConfig(incoming());
+      allow update: if isSignedIn() && isValidTimeSlotConfig(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_teams/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidTeamConfig(incoming());
+      allow update: if isSignedIn() && isValidTeamConfig(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_templates/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidTemplate(incoming());
+      allow update: if isSignedIn() && isValidTemplate(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_transactions/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidTransaction(incoming());
+      allow update: if isSignedIn() && isValidTransaction(incoming());
       allow delete: if isSignedIn();
     }
   }

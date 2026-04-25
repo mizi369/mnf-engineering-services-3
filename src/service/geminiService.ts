@@ -1,7 +1,7 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Cache for the AI instance and models
-let genAIInstance: GoogleGenAI | null = null;
+let genAIInstance: GoogleGenerativeAI | null = null;
 
 const getAIClient = () => {
   if (!genAIInstance) {
@@ -12,7 +12,7 @@ const getAIClient = () => {
     if (!apiKey) {
       console.warn('[GEMINI] API Key missing. AI features will be disabled.');
     }
-    genAIInstance = new GoogleGenAI(apiKey);
+    genAIInstance = new GoogleGenerativeAI(apiKey);
   }
   return genAIInstance;
 };
