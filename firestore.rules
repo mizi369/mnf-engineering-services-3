@@ -1,0 +1,193 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Validation Helpers ---
+
+    function isValidBooking(data) {
+      return data.keys().hasAll(['date', 'customerName', 'phone', 'serviceType', 'status'])
+        && data.date is string && data.date.size() <= 64
+        && data.customerName is string && data.customerName.size() <= 256
+        && data.phone is string && data.phone.size() <= 32
+        && data.serviceType is string && data.serviceType.size() <= 256
+        && data.status in ['Pending', 'Confirmed', 'Completed'];
+    }
+
+    function isValidEmployee(data) {
+      return data.keys().hasAll(['name', 'icNumber', 'position'])
+        && data.name is string && data.name.size() <= 256
+        && data.icNumber is string && data.icNumber.size() <= 32
+        && data.position in ['Manager', 'Technician', 'Senior Technician', 'Admin'];
+    }
+
+    function isValidPayroll(data) {
+      return data.keys().hasAll(['employeeId', 'month', 'year', 'net', 'status'])
+        && data.employeeId is string && data.employeeId.size() <= 128
+        && data.month is string && data.month.size() <= 32
+        && data.year is string && data.year.size() <= 16
+        && data.net is number
+        && data.status in ['Paid', 'Pending'];
+    }
+
+    function isValidInventoryItem(data) {
+      return data.keys().hasAll(['itemName', 'unit', 'stock', 'status'])
+        && data.itemName is string && data.itemName.size() <= 256
+        && data.unit in ['pcs', 'unit', 'set', 'kg', 'batang']
+        && data.stock is number
+        && data.status in ['Ada', 'Habis'];
+    }
+
+    function isValidSaleRecord(data) {
+      return data.keys().hasAll(['date', 'customerName', 'total', 'status'])
+        && data.date is string && data.date.size() <= 64
+        && data.customerName is string && data.customerName.size() <= 256
+        && data.total is number
+        && data.status in ['Pembayaran Diterima', 'Peringatan Bayaran'];
+    }
+
+    function isValidExpense(data) {
+      return data.keys().hasAll(['date', 'amount', 'category'])
+        && data.date is string && data.date.size() <= 64
+        && data.amount is number
+        && data.category in ['Maintenance', 'Fuel', 'Others'];
+    }
+
+    function isValidCustomer(data) {
+      return data.keys().hasAll(['name', 'phone'])
+        && data.name is string && data.name.size() <= 256
+        && data.phone is string && data.phone.size() <= 32;
+    }
+
+    function isValidSetting(data) {
+      return data.keys().hasAll(['key', 'value'])
+        && data.key is string && data.key.size() <= 128;
+    }
+
+    function isValidAiMapping(data) {
+      return data.keys().hasAll(['questionId', 'answerId', 'status'])
+        && data.questionId is string && data.questionId.size() <= 128
+        && data.answerId is string && data.answerId.size() <= 128
+        && data.status in ['Aktif', 'Nyahaktif'];
+    }
+
+    function isValidChatMessage(data) {
+      return data.keys().hasAll(['senderRole', 'body', 'phone'])
+        && data.senderRole in ['user', 'ai']
+        && data.body is string && data.body.size() <= 4096
+        && data.phone is string && data.phone.size() <= 32;
+    }
+
+    function isValidAppDocument(data) {
+      return data.keys().hasAll(['type', 'refNo', 'date', 'customerName', 'total'])
+        && data.type in ['invoice', 'quotation']
+        && data.refNo is string && data.refNo.size() <= 128
+        && data.date is string && data.date.size() <= 64
+        && data.customerName is string && data.customerName.size() <= 256
+        && data.total is number;
+    }
+
+    // --- Collections ---
+
+    match /mnf_bookings/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidBooking(incoming());
+      allow update: if isSignedIn() && isValidBooking(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_employees/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidEmployee(incoming());
+      allow update: if isSignedIn() && isValidEmployee(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_payroll/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidPayroll(incoming());
+      allow update: if isSignedIn() && isValidPayroll(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_inventory/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidInventoryItem(incoming());
+      allow update: if isSignedIn() && isValidInventoryItem(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_sales/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidSaleRecord(incoming());
+      allow update: if isSignedIn() && isValidSaleRecord(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_expenses/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidExpense(incoming());
+      allow update: if isSignedIn() && isValidExpense(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_customers/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidCustomer(incoming());
+      allow update: if isSignedIn() && isValidCustomer(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_settings/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidSetting(incoming());
+      allow update: if isSignedIn() && isValidSetting(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_ai_mappings/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidAiMapping(incoming());
+      allow update: if isSignedIn() && isValidAiMapping(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_chat_logs/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidChatMessage(incoming());
+      allow update: if isSignedIn() && isValidChatMessage(incoming());
+      allow delete: if isSignedIn();
+    }
+
+    match /mnf_documents/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidAppDocument(incoming());
+      allow update: if isSignedIn() && isValidAppDocument(incoming());
+      allow delete: if isSignedIn();
+    }
+  }
+}

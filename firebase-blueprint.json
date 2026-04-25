@@ -1,0 +1,202 @@
+{
+  "entities": {
+    "Booking": {
+      "title": "Booking",
+      "description": "Job reservation for engineering services",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "customerName": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "serviceType": { "type": "string" },
+        "unitType": { "type": "string" },
+        "quantity": { "type": "string" },
+        "timeSlot": { "type": "string" },
+        "team": { "type": "string" },
+        "teamId": { "type": "string" },
+        "status": { "type": "string", "enum": ["Pending", "Confirmed", "Completed"] },
+        "location_lat": { "type": "number" },
+        "location_lng": { "type": "number" }
+      },
+      "required": ["date", "customerName", "phone", "serviceType", "status"]
+    },
+    "Employee": {
+      "title": "Employee",
+      "description": "Staff and technicians",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "icNumber": { "type": "string" },
+        "address": { "type": "string" },
+        "position": { "type": "string", "enum": ["Manager", "Technician", "Senior Technician", "Admin"] },
+        "basic_salary": { "type": "number" },
+        "type": { "type": "string", "enum": ["Full-time", "Part-time"] },
+        "epf_enabled": { "type": "number" },
+        "socso_enabled": { "type": "number" }
+      },
+      "required": ["name", "icNumber", "position"]
+    },
+    "Payroll": {
+      "title": "Payroll",
+      "description": "Salary disbursement records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "employeeId": { "type": "string" },
+        "month": { "type": "string" },
+        "year": { "type": "string" },
+        "basic_salary": { "type": "number" },
+        "epf_employee": { "type": "number" },
+        "epf_employer": { "type": "number" },
+        "socso_employee": { "type": "number" },
+        "socso_employer": { "type": "number" },
+        "advance": { "type": "number" },
+        "gross": { "type": "number" },
+        "net": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["Tunai", "Transfer"] },
+        "status": { "type": "string", "enum": ["Paid", "Pending"] }
+      },
+      "required": ["employeeId", "month", "year", "net", "status"]
+    },
+    "InventoryItem": {
+      "title": "Inventory Item",
+      "description": "Stock items and materials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "shopName": { "type": "string" },
+        "itemName": { "type": "string" },
+        "unit": { "type": "string", "enum": ["pcs", "unit", "set", "kg", "batang"] },
+        "stock": { "type": "number" },
+        "status": { "type": "string", "enum": ["Ada", "Habis"] },
+        "buyPrice": { "type": "number" },
+        "sellPrice": { "type": "number" },
+        "paymentType": { "type": "string", "enum": ["Debit", "Credit"] },
+        "paymentMethod": { "type": "string", "enum": ["Tunai", "Transfer"] },
+        "date": { "type": "string", "format": "date" }
+      },
+      "required": ["itemName", "unit", "stock", "status"]
+    },
+    "SaleRecord": {
+      "title": "Sale Record",
+      "description": "Direct service sales",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "customerName": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "serviceDescription": { "type": "string" },
+        "adminName": { "type": "string" },
+        "amount": { "type": "number" },
+        "discount": { "type": "number" },
+        "total": { "type": "number" },
+        "paymentType": { "type": "string", "enum": ["Debit", "Credit"] },
+        "paymentMethod": { "type": "string", "enum": ["Tunai", "Transfer"] },
+        "status": { "type": "string", "enum": ["Pembayaran Diterima", "Peringatan Bayaran"] }
+      },
+      "required": ["date", "customerName", "total", "status"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Business expenditures",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "amount": { "type": "number" },
+        "description": { "type": "string" },
+        "category": { "type": "string", "enum": ["Maintenance", "Fuel", "Others"] },
+        "paymentType": { "type": "string", "enum": ["Debit", "Credit"] },
+        "paymentMethod": { "type": "string", "enum": ["Tunai", "Transfer"] }
+      },
+      "required": ["date", "amount", "category"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Client database",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "lastService": { "type": "string", "format": "date" },
+        "totalSpent": { "type": "number" },
+        "adMessage": { "type": "string" }
+      },
+      "required": ["name", "phone"]
+    },
+    "Setting": {
+      "title": "Setting",
+      "description": "System configuration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "key": { "type": "string" },
+        "value": { "type": "any" }
+      },
+      "required": ["key", "value"]
+    },
+    "AiMapping": {
+      "title": "AI Mapping",
+      "description": "AI Question to Answer mapping",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "questionId": { "type": "string" },
+        "answerId": { "type": "string" },
+        "priority": { "type": "string", "enum": ["Tinggi", "Sederhana", "Rendah"] },
+        "triggers": { "type": "string" },
+        "status": { "type": "string", "enum": ["Aktif", "Nyahaktif"] }
+      },
+      "required": ["questionId", "answerId", "status"]
+    },
+    "ChatMessage": {
+      "title": "Chat Message",
+      "description": "WhatsApp communication logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderRole": { "type": "string", "enum": ["user", "ai"] },
+        "body": { "type": "string" },
+        "time": { "type": "string" },
+        "phone": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "required": ["senderRole", "body", "phone"]
+    },
+    "AppDocument": {
+      "title": "App Document",
+      "description": "Invoices and Quotations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["invoice", "quotation"] },
+        "refNo": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "customerName": { "type": "string" },
+        "total": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["type", "refNo", "date", "customerName", "total"]
+    }
+  },
+  "firestore": {
+    "mnf_bookings": { "schema": "Booking", "description": "Client bookings" },
+    "mnf_employees": { "schema": "Employee", "description": "Staff list" },
+    "mnf_payroll": { "schema": "Payroll", "description": "Payment records" },
+    "mnf_inventory": { "schema": "InventoryItem", "description": "Stock inventory" },
+    "mnf_sales": { "schema": "SaleRecord", "description": "Sales logs" },
+    "mnf_expenses": { "schema": "Expense", "description": "Expenses logs" },
+    "mnf_customers": { "schema": "Customer", "description": "CRM data" },
+    "mnf_settings": { "schema": "Setting", "description": "App settings" },
+    "mnf_ai_mappings": { "schema": "AiMapping", "description": "AI configuration" },
+    "mnf_chat_logs": { "schema": "ChatMessage", "description": "Communication history" },
+    "mnf_documents": { "schema": "AppDocument", "description": "Financial documents" }
+  }
+}

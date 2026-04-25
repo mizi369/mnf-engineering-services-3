@@ -1,0 +1,9 @@
+{
+  "name": "Remix:  MNF Engineering Enterprise 10",
+  "description": "Professional Enterprise Dashboard for MNF Engineering Services with WhatsApp Automation, Payroll, Inventory, and AI Integration.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
